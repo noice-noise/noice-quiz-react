@@ -8,6 +8,6 @@
   }
 
   body {
-    @apply bg-gradient-to-b from-blue-500 to-indigo-600 text-white;
+    @apply relative bg-gradient-to-b from-blue-500 to-indigo-600 text-white;
   }
 }
