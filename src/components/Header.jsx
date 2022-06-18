@@ -1,7 +1,9 @@
 function Header() {
   return (
     <header>
-      <h1 className="text-3xl text-white font-bold text-center">Noice Quiz</h1>
+      <h1 className="text-center text-sm font-bold uppercase tracking-widest text-white">
+        Noice Quiz
+      </h1>
     </header>
   );
 }

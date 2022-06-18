@@ -14,6 +14,7 @@
     "jest": true
   },
   "rules": {
+    "import/no-unresolved": [2, { "caseSensitive": false }],
     "no-debugger": 0,
     "no-use-before-define": "off",
     "no-alert": 0,

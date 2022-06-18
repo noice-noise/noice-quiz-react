@@ -5,7 +5,7 @@ export default function NavItem({ href, children }) {
   return (
     <Link
       to={href}
-      className="text-center font-bold text-blue-600 transition-all bg-white px-3 py-4 rounded-2xl w-full hover:scale-110 tracking-wide"
+      className="w-full rounded-2xl bg-white px-3 py-4 text-center font-bold tracking-wide text-blue-600 transition-all hover:scale-110"
     >
       {children}
     </Link>
