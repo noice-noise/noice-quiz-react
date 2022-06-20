@@ -11,8 +11,11 @@ export default function Audio({ soundFileName, ...props }) {
   };
 
   useEffect(() => {
-    console.log('audio on supposedly');
-    play();
+    try {
+      play();
+    } catch (err) {
+      console.dir('Error', err);
+    }
   }, []);
 
   const handleClick = () => {
@@ -31,7 +34,7 @@ export default function Audio({ soundFileName, ...props }) {
         data-tip
         data-for="audioTip"
         onClick={() => handleClick()}
-        className="absolute top-3 right-3 rounded-lg border-none bg-white p-2 text-blue-500 transition-all active:scale-75 md:top-5 md:right-5 md:p-3 lg:top-7 lg:right-7"
+        className="flex items-center justify-center rounded-lg border-none bg-white p-2 text-blue-500 transition-all hover:scale-110 active:scale-75 md:p-3"
       >
         {muted ? (
           <HiVolumeOff className="h-5 w-5" />

@@ -5,7 +5,7 @@ export default function NavItem({ href, children }) {
   return (
     <Link
       to={href}
-      className="w-full rounded-2xl bg-white px-3 py-4 text-center font-bold tracking-wide text-blue-600 transition-all hover:scale-110"
+      className="hover:cta-pattern w-full rounded-2xl bg-white px-3 py-4 text-center font-bold tracking-wide text-blue-600 transition-all hover:scale-110"
     >
       {children}
     </Link>
@@ -14,5 +14,5 @@ export default function NavItem({ href, children }) {
 
 NavItem.propTypes = {
   href: PropTypes.string,
-  children: PropTypes.array,
+  children: PropTypes.string,
 };
