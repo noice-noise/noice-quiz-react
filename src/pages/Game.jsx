@@ -6,13 +6,16 @@ import {
   HiCheck,
   HiOutlineCollection,
   HiOutlineEmojiHappy,
+  HiOutlineRefresh,
+  HiOutlineX,
   HiX,
 } from 'react-icons/hi';
 
 import Choice from '../components/Quiz/Choice';
 import Audio from '../components/Audio';
+import Button from '../components/Button';
 
-export default function Game({ onEnd }) {
+export default function Game({ onEnd, category = 9 }) {
   const [quizzes, setQuizzes] = useState(null);
   const [choices, setChoices] = useState();
 
@@ -37,8 +40,7 @@ export default function Game({ onEnd }) {
     incorrect: `${choiceStyleBase} text-white bg-gradient-to-t from-red-600 to-rose-400`,
   };
 
-  const quizUrl =
-    'https://opentdb.com/api.php?amount=10&category=9&type=multiple';
+  const quizUrl = `https://opentdb.com/api.php?amount=10&category=${category}&type=multiple`;
 
   useEffect(() => {
     fetchQuizzes(quizUrl);
@@ -52,33 +54,32 @@ export default function Game({ onEnd }) {
     if (!quizzes) {
       return;
     }
+
     setCurrentQuestion(() => quizzes[currentQuestionCount]);
     appendAndShuffleChoices();
-    console.log('qcount', currentQuestionCount);
+
     if (currentQuestionCount >= 10) {
-      onEnd({ correctCount: correctAnswers });
-      navigate('/end');
+      handleEnd();
     }
   }, [quizzes, currentQuestion, currentQuestionCount]);
 
-  const fetchQuizzes = (url) => {
-    console.log('Fetching');
-    fetch(url, {
-      method: 'GET',
-    })
-      .then((res) => {
-        if (!res.ok) {
-          console.log('err?');
-          throw new Error('Could not fetch data.');
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setQuizzes([...data.results]);
-      })
-      .catch((err) => {
-        console.log(err);
+  const fetchQuizzes = async (url) => {
+    try {
+      const res = await fetch(url, {
+        method: 'GET',
       });
+
+      if (!res.ok) {
+        throw new Error('Could not fetch data.');
+      }
+
+      const data = await res.json();
+      setQuizzes([...data.results]);
+    } catch (err) {
+      console.log(err);
+      console.log('Restarting the app...');
+      reloadPage();
+    }
   };
 
   const appendAndShuffleChoices = () => {
@@ -163,8 +164,27 @@ export default function Game({ onEnd }) {
       );
     });
 
+  const reloadPage = () => {
+    window.location.reload(false);
+  };
+
+  const handleEnd = () => {
+    onEnd({ correctCount: correctAnswers });
+    navigate('/end');
+  };
+
   return (
     <div className="h-full w-full max-w-xl px-10">
+      <div className="absolute top-3 right-3 flex flex-col gap-2 md:top-5 md:right-5 lg:top-7 lg:right-7">
+        <Button onClick={handleEnd}>
+          <HiOutlineX className="h-5 w-5" />
+        </Button>
+        <Button onClick={reloadPage}>
+          <HiOutlineRefresh className="h-5 w-5" />
+        </Button>
+        <Audio soundFileName="bgm.mp3" />
+      </div>
+
       {isLoading && (
         <div className="flex h-full w-full flex-col items-center justify-center">
           <HiOutlineEmojiHappy className="h-10 w-10 animate-spin" />
@@ -173,7 +193,6 @@ export default function Game({ onEnd }) {
       {!isLoading && (
         <>
           <div className="flex h-[10%] w-full items-center justify-between">
-            <Audio soundFileName="bgm.mp3" />
             <span className="flex items-center gap-3">
               <HiOutlineCollection /> {currentQuestionCount + 1}/
               {quizzes?.length}
@@ -202,4 +221,5 @@ export default function Game({ onEnd }) {
 
 Game.propTypes = {
   onEnd: PropTypes.func,
+  category: PropTypes.string,
 };
